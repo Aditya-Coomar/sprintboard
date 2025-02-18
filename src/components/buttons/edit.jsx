@@ -32,6 +32,9 @@ import {
 
 import { useState } from "react";
 
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+
 const EditTaskButton = ({ taskID }) => {
   const todo = useSelector((state) => getTodoById(state, taskID));
   const [task, setTask] = useState({ ...todo });
@@ -39,6 +42,12 @@ const EditTaskButton = ({ taskID }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const dispatch = useDispatch();
+
+  const editor = useEditor({
+    extensions: [StarterKit.configure({})],
+    content: task.description,
+    editable: false,
+  });
 
   const handleUpdateTask = (e) => {
     e.preventDefault();
@@ -148,15 +157,12 @@ const EditTaskButton = ({ taskID }) => {
               </div>
               <div className="flex flex-col gap-2">
                 <span className="font-semibold tracking-wide">Description</span>
-                <textarea
-                  type="text"
-                  value={task?.description}
-                  onChange={(e) =>
-                    setTask({ ...task, description: e.target.value })
-                  }
-                  className="bg-zinc-900 text-zinc-100 px-4 py-3 border border-zinc-700 rounded-lg focus:outline-none focus-visible:outline-none h-[100px]"
-                  disabled
-                />
+                <div className="bg-zinc-900 text-white px-4 py-3 border border-zinc-700 rounded-lg h-40 overflow-y-auto">
+                  <EditorContent
+                    editor={editor}
+                    className="focus:outline-none w-full"
+                  />
+                </div>
               </div>
               <div className="flex flex-col gap-2">
                 <span className="font-semibold tracking-wide">Due Date</span>

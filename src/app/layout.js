@@ -1,5 +1,4 @@
 import "./globals.css";
-import 'react-quill/dist/quill.snow.css';
 import QueryProvider from "@/providers/QueryProvider";
 import ReduxProviders from "@/providers/ReduxProvider";
 

@@ -33,7 +33,49 @@ import {
 
 import { useState } from "react";
 
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
+import ListItem from "@tiptap/extension-list-item";
+import Blockquote from "@tiptap/extension-blockquote";
+import CodeBlock from "@tiptap/extension-code-block";
+import Strike from "@tiptap/extension-strike";
+import Placeholder from "@tiptap/extension-placeholder";
+import {
+  Bold,
+  Italic,
+  Underline as UnderlineIcon,
+  List,
+  ListOrdered,
+  Heading,
+  Quote,
+  Code,
+  Strikethrough,
+  Undo,
+  Redo,
+} from "lucide-react";
+
 const AddTaskButton = () => {
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({}),
+      Underline,
+      BulletList,
+      OrderedList,
+      ListItem,
+      Blockquote,
+      CodeBlock,
+      Strike,
+      Placeholder.configure({
+        placeholder: "Write something...",
+        showOnlyWhenEditable: true,
+      }),
+    ],
+    content: "",
+  });
+
   const [task, setTask] = useState({
     id: null,
     todo: "",
@@ -52,7 +94,8 @@ const AddTaskButton = () => {
     dispatch(
       addTodo({
         ...task,
-        id: Date.now(),
+        id: String(Date.now()),
+        description: editor && editor.getHTML(),
         dueDate: task.dueDate
           ? task.dueDate.toLocaleDateString("en-US", {
               weekday: "short",
@@ -72,6 +115,7 @@ const AddTaskButton = () => {
       completed: false,
       inProgress: false,
     });
+    editor && editor.commands.clearContent();
     setDialogOpen(false);
   };
 
@@ -131,7 +175,160 @@ const AddTaskButton = () => {
               </div>
               <div className="flex flex-col gap-2">
                 <span className="font-semibold tracking-wide">Description</span>
-                
+                {/* Toolbar */}
+                <div className="flex flex-wrap gap-2 bg-zinc-800 p-2 rounded-md">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleBold().run();
+                    }}
+                    className={`p-1 rounded ${
+                      editor.isActive("bold") ? "bg-zinc-700" : ""
+                    }`}
+                  >
+                    <Bold size={16} className="text-white" />
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleItalic().run();
+                    }}
+                    className={`p-1 rounded ${
+                      editor.isActive("italic") ? "bg-zinc-700" : ""
+                    }`}
+                  >
+                    <Italic size={16} className="text-white" />
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleUnderline().run();
+                    }}
+                    className={`p-1 rounded ${
+                      editor.isActive("underline") ? "bg-zinc-700" : ""
+                    }`}
+                  >
+                    <UnderlineIcon size={16} className="text-white" />
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleStrike().run();
+                    }}
+                    className={`p-1 rounded ${
+                      editor.isActive("strike") ? "bg-zinc-700" : ""
+                    }`}
+                  >
+                    <Strikethrough size={16} className="text-white" />
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleHeading({ level: 2 }).run();
+                    }}
+                    className={`p-1 rounded ${
+                      editor.isActive("heading", { level: 2 })
+                        ? "bg-zinc-700"
+                        : ""
+                    }`}
+                  >
+                    <Heading size={16} className="text-white" />
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleHeading({ level: 3 }).run();
+                    }}
+                    className={`p-1 rounded ${
+                      editor.isActive("heading", { level: 3 })
+                        ? "bg-zinc-700"
+                        : ""
+                    }`}
+                  >
+                    <Heading size={14} className="text-white" />
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleBulletList().run();
+                    }}
+                    className={`p-1 rounded ${
+                      editor.isActive("bulletList") ? "bg-zinc-700" : ""
+                    }`}
+                  >
+                    <List size={16} className="text-white" />
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleOrderedList().run();
+                    }}
+                    className={`p-1 rounded ${
+                      editor.isActive("orderedList") ? "bg-zinc-700" : ""
+                    }`}
+                  >
+                    <ListOrdered size={16} className="text-white" />
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleBlockquote().run();
+                    }}
+                    className={`p-1 rounded ${
+                      editor.isActive("blockquote") ? "bg-zinc-700" : ""
+                    }`}
+                  >
+                    <Quote size={16} className="text-white" />
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().toggleCodeBlock().run();
+                    }}
+                    className={`p-1 rounded ${
+                      editor.isActive("codeBlock") ? "bg-zinc-700" : ""
+                    }`}
+                  >
+                    <Code size={16} className="text-white" />
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().undo().run();
+                    }}
+                    className="p-1 rounded"
+                  >
+                    <Undo size={16} className="text-white" />
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      editor.chain().focus().redo().run();
+                    }}
+                    className="p-1 rounded"
+                  >
+                    <Redo size={16} className="text-white" />
+                  </button>
+                </div>
+
+                {/* Editor Content */}
+                <div className="bg-zinc-900 text-white px-4 py-3 border border-zinc-700 rounded-lg h-40 overflow-y-auto">
+                  <EditorContent
+                    editor={editor}
+                    className="focus:outline-none w-full"
+                  />
+                </div>
               </div>
               <div className="flex flex-col gap-2">
                 <span className="font-semibold tracking-wide">Due Date</span>
