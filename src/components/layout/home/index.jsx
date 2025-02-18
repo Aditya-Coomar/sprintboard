@@ -1,7 +1,7 @@
 const HomeLayout = ({ children }) => {
   return (
     <>
-      <div>{children}</div>
+      <div className="p-2 w-full">{children}</div>
     </>
   );
 };
