@@ -42,7 +42,6 @@ const todoSlice = createSlice({
       if (!state.todos) return;
       state.todos = state.todos.filter((todo) => todo.id !== action.payload);
     },
-
   },
 });
 

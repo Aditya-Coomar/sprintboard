@@ -1,3 +1,4 @@
+"use client";
 import { useDispatch } from "react-redux";
 import { addTodo } from "@/lib/features/todoSlice";
 
@@ -130,14 +131,7 @@ const AddTaskButton = () => {
               </div>
               <div className="flex flex-col gap-2">
                 <span className="font-semibold tracking-wide">Description</span>
-                <textarea
-                  type="text"
-                  value={task?.description}
-                  onChange={(e) =>
-                    setTask({ ...task, description: e.target.value })
-                  }
-                  className="bg-zinc-900 text-zinc-100 px-4 py-3 border border-zinc-700 rounded-lg focus:outline-none focus-visible:outline-none h-[100px]"
-                />
+                
               </div>
               <div className="flex flex-col gap-2">
                 <span className="font-semibold tracking-wide">Due Date</span>

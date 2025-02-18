@@ -1,13 +1,7 @@
 "use client";
 
 import { useSelector, useDispatch } from "react-redux";
-import {
-  setTodos,
-  addTodo,
-  updateTodo,
-  deleteTodo,
-} from "@/lib/features/todoSlice";
-
+import { setTodos, updateTodo } from "@/lib/features/todoSlice";
 import HomeLayout from "@/components/layout/home";
 import TaskCard from "@/components/card";
 import { useQuery } from "@tanstack/react-query";
@@ -16,11 +10,32 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import AddTaskButton from "@/components/buttons/add";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { useCallback } from "react";
+
+// Strict Mode compatible Droppable
+const StrictModeDroppable = ({ children, ...props }) => {
+  const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
+    const animation = requestAnimationFrame(() => setEnabled(true));
+    return () => {
+      cancelAnimationFrame(animation);
+      setEnabled(false);
+    };
+  }, []);
+
+  if (!enabled) {
+    return null;
+  }
+
+  return <Droppable {...props}>{children}</Droppable>;
+};
 
 const fetchTasks = async () => {
-  const res = await fetch("https://dummyjson.com/c/88c7-108b-4b44-bb8d");
+  const res = await fetch("https://dummyjson.com/c/d30a-526f-47cb-bb5b");
   return res.json();
 };
 
@@ -28,7 +43,7 @@ export default function Home() {
   const todos = useSelector((state) => state.todos.todos);
   const dispatch = useDispatch();
   const { data, status } = useQuery({
-    queryKey: ['todos'],
+    queryKey: ["todos"],
     queryFn: fetchTasks,
     initialData: { todos },
   });
@@ -37,23 +52,57 @@ export default function Home() {
     if (!todos && data && data.todos) {
       dispatch(setTodos(data.todos));
     }
-  }, [data, dispatch]);
+  }, [data, dispatch, todos]);
 
   const [todoOpen, setTodoOpen] = useState(true);
   const [inProgressOpen, setInProgressOpen] = useState(true);
   const [completedOpen, setCompletedOpen] = useState(true);
 
-  console.log(todos);
+  const handleDragEnd = useCallback(
+    (result) => {
+      const { destination, source, draggableId } = result;
+
+      // Return if there's no destination or if the item was dropped in the same place
+      if (
+        !destination ||
+        (destination.droppableId === source.droppableId &&
+          destination.index === source.index)
+      ) {
+        return;
+      }
+
+      const task = todos?.find((t) => t.id === draggableId);
+      if (!task) return;
+
+      let updates = {};
+      switch (destination.droppableId) {
+        case "todo":
+          updates = { inProgress: false, completed: false };
+          break;
+        case "inProgress":
+          updates = { inProgress: true, completed: false };
+          break;
+        case "completed":
+          updates = { inProgress: false, completed: true };
+          break;
+        default:
+          return;
+      }
+
+      dispatch(updateTodo({ id: draggableId, updates }));
+    },
+    [dispatch, todos]
+  );
 
   return (
-    <>
-      <HomeLayout>
-        <div className="flex justify-between items-center w-full">
-          <div></div>
-          <AddTaskButton />
-        </div>
+    <HomeLayout>
+      <div className="flex justify-between items-center w-full">
+        <div></div>
+        <AddTaskButton />
+      </div>
+      <DragDropContext onDragEnd={handleDragEnd}>
         <div className="flex flex-wrap gap-4 justify-start items-start">
-          {/* Todo */}
+          {/* Todo Column */}
           <div className="flex flex-col justify-center items-center w-fit px-3 py-4 min-w-[360px] max-w-[550px] border border-zinc-900 rounded-[8px] gap-6">
             <Collapsible
               className="w-full"
@@ -64,11 +113,9 @@ export default function Home() {
                 <span className="text-zinc-100 font-semibold text-lg tracking-wide flex gap-2">
                   <span>Todo</span>
                   <span className="bg-zinc-700 rounded-full px-2 py-1 text-sm font-medium">
-                    {
-                      todos?.filter(
-                        (task) => !task.completed && !task.inProgress
-                      ).length || 0
-                    }
+                    {todos?.filter(
+                      (task) => !task.completed && !task.inProgress
+                    ).length || 0}
                   </span>
                 </span>
                 <CollapsibleTrigger>
@@ -84,38 +131,62 @@ export default function Home() {
                 </CollapsibleTrigger>
               </div>
               <CollapsibleContent>
-                <div className="flex flex-col justify-center items-center gap-4 mt-6">
-                  {status === "loading" && <div>Loading...</div>}
-                  {status === "error" && <div>Error fetching data</div>}
-                  {status === "success" &&
-                  todos &&
-                    todos
-                      .filter((task) => !task.completed && !task.inProgress)
-                      .sort((a, b) => {
-                        let dateA = new Date(a.dueDate);
-                        let dateB = new Date(b.dueDate);
-                        if (dateA - dateB !== 0) {
-                          return dateA - dateB;
-                        }
-                        return b.priority - a.priority;
-                      })
-                      .map((task) => (
-                        <TaskCard
-                          key={task.id}
-                          taskName={task.todo}
-                          taskID={task.id}
-                          priority={task.priority}
-                          dueDate={task.dueDate}
-                          description={task.description}
-
-                        />
-                      ))}
-                </div>
+                <StrictModeDroppable droppableId="todo" isDropDisabled={false} isCombineEnabled={true} ignoreContainerClipping={true}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className="flex flex-col justify-center items-center gap-4 mt-6 min-h-[50px]"
+                    >
+                      {status === "loading" && <div>Loading...</div>}
+                      {status === "error" && <div>Error fetching data</div>}
+                      {status === "success" &&
+                        todos &&
+                        todos
+                          .filter((task) => !task.completed && !task.inProgress)
+                          .sort((a, b) => {
+                            let dateA = new Date(a.dueDate);
+                            let dateB = new Date(b.dueDate);
+                            if (dateA - dateB !== 0) {
+                              return dateA - dateB;
+                            }
+                            return b.priority - a.priority;
+                          })
+                          .map((task, index) => (
+                            <Draggable
+                              key={task.id}
+                              draggableId={task.id}
+                              index={index}
+                            >
+                              {(provided, snapshot) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  className={`w-full transition-opacity ${
+                                    snapshot.isDragging ? "opacity-75" : ""
+                                  }`}
+                                >
+                                  <TaskCard
+                                    taskName={task.todo}
+                                    taskID={task.id}
+                                    priority={task.priority}
+                                    dueDate={task.dueDate}
+                                    description={task.description}
+                                  />
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </StrictModeDroppable>
               </CollapsibleContent>
             </Collapsible>
           </div>
 
-          {/* In Progress */}
+          {/* In Progress Column */}
           <div className="flex flex-col justify-center items-center w-fit px-3 py-4 min-w-[360px] max-w-[550px] border border-zinc-900 rounded-[8px] gap-6">
             <Collapsible
               className="w-full"
@@ -124,7 +195,7 @@ export default function Home() {
             >
               <div className="flex justify-between items-center gap-2 w-full">
                 <span className="text-zinc-100 font-semibold text-lg tracking-wide flex gap-2">
-                  <span> In Progress </span>
+                  <span>In Progress</span>
                   <span className="bg-zinc-700 rounded-full px-2 py-1 text-sm font-medium">
                     {todos?.filter((task) => task.inProgress).length || 0}
                   </span>
@@ -142,37 +213,62 @@ export default function Home() {
                 </CollapsibleTrigger>
               </div>
               <CollapsibleContent>
-                <div className="flex flex-col justify-center items-center gap-4 mt-6">
-                  {status === "loading" && <div>Loading...</div>}
-                  {status === "error" && <div>Error fetching data</div>}
-                  {status === "success" &&
-                    todos &&
-                    todos
-                      .filter((task) => task.inProgress)
-                      .sort((a, b) => {
-                        let dateA = new Date(a.dueDate);
-                        let dateB = new Date(b.dueDate);
-                        if (dateA - dateB !== 0) {
-                          return dateA - dateB;
-                        }
-                        return b.priority - a.priority;
-                      })
-                      .map((task) => (
-                        <TaskCard
-                          key={task.id}
-                          taskName={task.todo}
-                          taskID={task.id}
-                          priority={task.priority}
-                          dueDate={task.dueDate}
-                          taskDescription={task.description}
-                        />
-                      ))}
-                </div>
+                <StrictModeDroppable droppableId="inProgress" isDropDisabled={false} isCombineEnabled={true} ignoreContainerClipping={true}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className="flex flex-col justify-center items-center gap-4 mt-6 min-h-[50px]"
+                    >
+                      {status === "loading" && <div>Loading...</div>}
+                      {status === "error" && <div>Error fetching data</div>}
+                      {status === "success" &&
+                        todos &&
+                        todos
+                          .filter((task) => task.inProgress)
+                          .sort((a, b) => {
+                            let dateA = new Date(a.dueDate);
+                            let dateB = new Date(b.dueDate);
+                            if (dateA - dateB !== 0) {
+                              return dateA - dateB;
+                            }
+                            return b.priority - a.priority;
+                          })
+                          .map((task, index) => (
+                            <Draggable
+                              key={task.id}
+                              draggableId={task.id}
+                              index={index}
+                            >
+                              {(provided, snapshot) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  className={`w-full transition-opacity ${
+                                    snapshot.isDragging ? "opacity-75" : ""
+                                  }`}
+                                >
+                                  <TaskCard
+                                    taskName={task.todo}
+                                    taskID={task.id}
+                                    priority={task.priority}
+                                    dueDate={task.dueDate}
+                                    description={task.description}
+                                  />
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </StrictModeDroppable>
               </CollapsibleContent>
             </Collapsible>
           </div>
 
-          {/* In Completed */}
+          {/* Completed Column */}
           <div className="flex flex-col justify-center items-center w-fit px-3 py-4 min-w-[360px] max-w-[550px] border border-zinc-900 rounded-[8px] gap-6">
             <Collapsible
               className="w-full"
@@ -181,7 +277,7 @@ export default function Home() {
             >
               <div className="flex justify-between items-center gap-2 w-full">
                 <span className="text-zinc-100 font-semibold text-lg tracking-wide flex gap-2">
-                  <span> Completed </span>
+                  <span>Completed</span>
                   <span className="bg-zinc-700 rounded-full px-2 py-1 text-sm font-medium">
                     {todos?.filter((task) => task.completed).length || 0}
                   </span>
@@ -199,37 +295,62 @@ export default function Home() {
                 </CollapsibleTrigger>
               </div>
               <CollapsibleContent>
-                <div className="flex flex-col justify-center items-center gap-4 mt-6">
-                  {status === "loading" && <div>Loading...</div>}
-                  {status === "error" && <div>Error fetching data</div>}
-                  {status === "success" &&
-                    todos &&
-                    todos
-                      .filter((task) => task.completed)
-                      .sort((a, b) => {
-                        let dateA = new Date(a.dueDate);
-                        let dateB = new Date(b.dueDate);
-                        if (dateA - dateB !== 0) {
-                          return dateB - dateA;
-                        }
-                        return b.priority - a.priority;
-                      })
-                      .map((task) => (
-                        <TaskCard
-                          key={task.id}
-                          taskName={task.todo}
-                          taskID={task.id}
-                          priority={task.priority}
-                          dueDate={task.dueDate}
-                          taskDescription={task.description}
-                        />
-                      ))}
-                </div>
+                <StrictModeDroppable droppableId="completed" isDropDisabled={false} isCombineEnabled={true} ignoreContainerClipping={true}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      className="flex flex-col justify-center items-center gap-4 mt-6 min-h-[50px]"
+                    >
+                      {status === "loading" && <div>Loading...</div>}
+                      {status === "error" && <div>Error fetching data</div>}
+                      {status === "success" &&
+                        todos &&
+                        todos
+                          .filter((task) => task.completed)
+                          .sort((a, b) => {
+                            let dateA = new Date(a.dueDate);
+                            let dateB = new Date(b.dueDate);
+                            if (dateA - dateB !== 0) {
+                              return dateB - dateA;
+                            }
+                            return b.priority - a.priority;
+                          })
+                          .map((task, index) => (
+                            <Draggable
+                              key={task.id}
+                              draggableId={task.id}
+                              index={index}
+                            >
+                              {(provided, snapshot) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  className={`w-full transition-opacity ${
+                                    snapshot.isDragging ? "opacity-75" : ""
+                                  }`}
+                                >
+                                  <TaskCard
+                                    taskName={task.todo}
+                                    taskID={task.id}
+                                    priority={task.priority}
+                                    dueDate={task.dueDate}
+                                    description={task.description}
+                                  />
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </StrictModeDroppable>
               </CollapsibleContent>
             </Collapsible>
           </div>
         </div>
-      </HomeLayout>
-    </>
+      </DragDropContext>
+    </HomeLayout>
   );
 }
