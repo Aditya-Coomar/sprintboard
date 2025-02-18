@@ -1,3 +1,4 @@
+"use client";
 import { useSelector, useDispatch } from "react-redux";
 import { getTodoById, updateTodo, deleteTodo } from "@/lib/features/todoSlice";
 
@@ -5,7 +6,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
