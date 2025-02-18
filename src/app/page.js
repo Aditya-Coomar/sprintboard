@@ -43,6 +43,8 @@ export default function Home() {
   const [inProgressOpen, setInProgressOpen] = useState(true);
   const [completedOpen, setCompletedOpen] = useState(true);
 
+  console.log(todos);
+
   return (
     <>
       <HomeLayout>

@@ -1,3 +1,5 @@
+import EditTaskButton from "@/components/buttons/edit";
+
 const TaskCard = ({ taskID, taskName, description, priority, dueDate }) => {
   const priorityCode = {
     0: {color : "bg-green-700/50 text-green-500", text: "Low"},
@@ -11,17 +13,7 @@ const TaskCard = ({ taskID, taskName, description, priority, dueDate }) => {
           <span className="font-medium text-xl tracking-wide">
             {taskName || "Sprint Board Task Name"}
           </span>
-          <button className="focus:outline-none">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="20px"
-              viewBox="0 -960 960 960"
-              width="20px"
-              fill="#D9D9D9"
-            >
-              <path d="M240-400q-33 0-56.5-23.5T160-480q0-33 23.5-56.5T240-560q33 0 56.5 23.5T320-480q0 33-23.5 56.5T240-400Zm240 0q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm240 0q-33 0-56.5-23.5T640-480q0-33 23.5-56.5T720-560q33 0 56.5 23.5T800-480q0 33-23.5 56.5T720-400Z" />
-            </svg>
-          </button>
+            <EditTaskButton taskID={taskID} />
         </div>
         <div className="font-light tracking-wider text-base text-zinc-400">
           {`SB-0${taskID || "01"}`}
@@ -44,7 +36,7 @@ const TaskCard = ({ taskID, taskName, description, priority, dueDate }) => {
             >
               <path d="M580-240q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-40q0-17 11.5-28.5T280-880q17 0 28.5 11.5T320-840v40h320v-40q0-17 11.5-28.5T680-880q17 0 28.5 11.5T720-840v40h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z" />
             </svg>
-            <span className="text-lg text-zinc-400">{dueDate || "Feb X, 20xx"}</span>
+            <span className="text-lg text-zinc-400">{dueDate || "No Due Date"}</span>
           </div>
           <div className="flex items-center gap-2">
             <svg

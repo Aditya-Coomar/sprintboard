@@ -42,8 +42,13 @@ const todoSlice = createSlice({
       if (!state.todos) return;
       state.todos = state.todos.filter((todo) => todo.id !== action.payload);
     },
+
   },
 });
+
+export const getTodoById = (state, id) => {
+  return state.todos.todos.find((todo) => todo.id === id);
+};
 
 export const { setTodos, addTodo, updateTodo, deleteTodo } = todoSlice.actions;
 
