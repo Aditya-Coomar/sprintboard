@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useState } from "react";
 
 const HomeLayout = ({ children }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (
     <>
       <div className="w-full flex gap-4 overflow-hidden max-h-screen">

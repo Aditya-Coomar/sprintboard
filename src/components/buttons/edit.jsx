@@ -134,7 +134,7 @@ const EditTaskButton = ({ taskID }) => {
         </DialogTrigger>
         {dialogOpen && (
           <DialogContent
-            className="bg-zinc-950 text-zinc-100 border border-zinc-800 rounded-xl min-w-[350px]"
+            className="bg-zinc-950 text-zinc-100 border border-zinc-800 rounded-xl min-w-[350px] overflow-auto max-h-screen"
             onInteractOutside={(e) => e.preventDefault()}
           >
             <DialogTitle className="tracking-wider font-semibold text-lg">

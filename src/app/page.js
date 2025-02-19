@@ -181,7 +181,7 @@ export default function Home() {
           <AddTaskButton />
         </div>
       </div>
-      <div className="h-full mt-5 flex flex-col items-center w-full ml-1">
+      <div className="h-full mt-5 flex flex-col w-full ml-1">
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="flex flex-wrap gap-4 justify-start items-start">
             {/* Todo Column */}
