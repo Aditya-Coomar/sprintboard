@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Sprint Board 🚀
 
-## Getting Started
+**A Modern Kanban-Style Todo List Built with Next.js.**
 
-First, run the development server:
+![Next.js](https://img.shields.io/badge/Next.js-000000?logo=next.js&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?logo=node.js&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-0891B2?logo=tailwind-css&logoColor=white)
+![React Query](https://img.shields.io/badge/React_Query-FF4154?logo=react-query&logoColor=white)
+![Redux](https://img.shields.io/badge/Redux-764ABC?logo=redux&logoColor=white)
+![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-6D28D9?logo=react&logoColor=white)
+![react-beautiful-dnd](https://img.shields.io/badge/react_Beautiful_DnD-00D3F8?logo=react&logoColor=white)
+![TipTap Rich Text Editor](https://img.shields.io/badge/TipTap_Rich_Text_Editor-FF5C5C?logo=tiptap&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-blue)
 
+---
+
+## Prerequisites 📋
+
+Before you begin, ensure you have installed:
+- **Node.js 18.x** or higher ([Download](https://nodejs.org/))
+- **npm 9.x**/ **Yarn 1.22.x** or higher
+- **Git** ([Download](https://git-scm.com/))
+- Recommended code editor: **VS Code** ([Download](https://code.visualstudio.com/))
+
+---
+
+## Installation 🛠️
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/Aditya-Coomar/sprintboard.git
+cd sprintboard
+```
+
+2. **Install dependencies**
+```bash
+npm install
+# or
+yarn install
+```
+---
+
+## Development Server ▶️
+
+Start the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## Project Structure 📁
+
+```bash
+├── sprintboard/       # App Root directory
+├── public/            # Static assets
+├── src/
+│   ├── app/           # Application Entry Point
+│   ├── components/    # Reusable components
+│   ├── lib/           # Utilities/helpers
+│   ├── providers/     # Global Providers
+│   └── ...
+├── next.config.js     # Next.js configuration
+└── package.json
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Build & Deployment 🚀
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Production build**
+```bash
+npm run build
+# or
+yarn build
+```
 
-## Learn More
+2. **Start production server**
+```bash
+npm start
+# or
+yarn start
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment 🚀
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+https://sprintboard.vercel.app/
 
-## Deploy on Vercel
+```
+![image](https://github.com/user-attachments/assets/1526b784-cee1-486c-bb83-cf69e4e4a7be)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License 📄
+
+This project is licensed under the MIT License - see [LICENSE](LICENSE) file for details.
+
+---
