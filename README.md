@@ -56,7 +56,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## Project Structure 📁
 
 ```bash
-├── sprintboard/       # App Root directory
+sprintboard/            # App Root directory
 ├── public/            # Static assets
 ├── src/
 │   ├── app/           # Application Entry Point
