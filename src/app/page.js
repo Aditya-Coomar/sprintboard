@@ -182,7 +182,15 @@ export default function Home() {
         </div>
       </div>
       <div className="h-full mt-5 flex flex-col w-full ml-1">
-        <DragDropContext onDragEnd={handleDragEnd}>
+        <DragDropContext
+          onDragEnd={handleDragEnd}
+          onDragStart={(e) => {
+            if (e.target?.tagName === "BUTTON" || e.target?.tagName === "button") {
+              e.preventDefault();
+              return false;
+            }
+          }}
+        >
           <div className="flex flex-wrap gap-4 justify-start items-start">
             {/* Todo Column */}
             <div className="flex flex-col justify-center items-center w-fit px-3 py-4 min-w-[360px] max-w-[550px] border border-zinc-900 rounded-[8px] gap-6">

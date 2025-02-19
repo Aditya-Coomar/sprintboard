@@ -116,16 +116,16 @@ const EditTaskButton = ({ taskID }) => {
       >
         <DialogTrigger asChild>
           <button
-            className="focus:outline-none z-10"
+            className="focus:outline-none z-10 bg-zinc-800 p-1 rounded-md pointer-events-auto edit-task-button"
             onClick={(e) => {
               setDialogOpen(true);
             }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              height="20px"
+              height="22px"
               viewBox="0 -960 960 960"
-              width="20px"
+              width="22px"
               fill="#D9D9D9"
             >
               <path d="M240-400q-33 0-56.5-23.5T160-480q0-33 23.5-56.5T240-560q33 0 56.5 23.5T320-480q0 33-23.5 56.5T240-400Zm240 0q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm240 0q-33 0-56.5-23.5T640-480q0-33 23.5-56.5T720-560q33 0 56.5 23.5T800-480q0 33-23.5 56.5T720-400Z" />
@@ -138,10 +138,10 @@ const EditTaskButton = ({ taskID }) => {
             onInteractOutside={(e) => e.preventDefault()}
           >
             <DialogTitle className="tracking-wider font-semibold text-lg">
-              Add a new task
+              Your Task
             </DialogTitle>
             <DialogDescription className="text-base font-light tracking-wider -mt-2">
-              Add a new task to your sprint board
+              Edit task on your sprint board
             </DialogDescription>
             <form className="flex flex-col gap-6 mt-4">
               <div className="flex flex-col gap-2">

@@ -8,7 +8,7 @@ const TaskCard = ({ taskID, taskName, description, priority, dueDate }) => {
   };
   return (
     <>
-      <div className="w-full px-5 py-6 rounded-xl shadow-lg bg-zinc-900 text-zinc-100 flex flex-col gap-5">
+      <div className="w-full px-5 py-6 rounded-xl shadow-lg bg-zinc-900 text-zinc-100 flex flex-col gap-5 pointer-events-none">
         <div className="flex justify-between items-start gap-8">
           <span className="font-medium text-xl tracking-wide">
             {taskName || "Sprint Board Task Name"}
