@@ -158,7 +158,7 @@ export default function Home() {
             <div className="text-xl sm:text-2xl md:text-3xl tracking-wider text-zinc-100 font-medium">
               Your Sprint Board
             </div>
-            <div className="flex items-center gap-3 border bg-zinc-900 border-zinc-800 rounded-md px-2 py-[2px] md:py-1">
+            <div className="flex items-center gap-3 border bg-zinc-900 border-zinc-800 rounded-md px-2 md:py-1">
               <span className="text-zinc-400 font-medium text-sm sm:text-base md:text-lg lg:text-xl tracking-wide">
                 Priority
               </span>
