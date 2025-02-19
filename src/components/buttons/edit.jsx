@@ -54,7 +54,17 @@ const EditTaskButton = ({ taskID }) => {
     dispatch(
       updateTodo({
         id: task.id,
-        updates: task,
+        updates: {
+          ...task,
+          dueDate: task.dueDate
+            ? task.dueDate.toLocaleDateString("en-US", {
+                weekday: "short",
+                month: "short",
+                day: "2-digit",
+                year: "numeric",
+              })
+            : null,
+        },
       })
     );
     setDialogOpen(false);
