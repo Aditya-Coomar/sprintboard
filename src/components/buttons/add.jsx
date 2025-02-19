@@ -136,7 +136,7 @@ const AddTaskButton = () => {
       >
         <DialogTrigger asChild>
           <button
-            className="bg-emerald-500 px-2 sm:px-3 md:px-4 py-2 text-sm sm:text-base md:text-lg text-zinc-950 font-semibold tracking-wide flex items-center justify-center gap-1 md:gap-3 rounded-sm md:rounded-[8px] focus:outline-none focus-within:outline-none focus-visible:outline-none"
+            className="bg-emerald-500 px-2 sm:px-3 md:px-4 py-2 min-w-[120px] text-sm sm:text-base md:text-lg text-zinc-950 font-semibold tracking-wide flex items-center justify-center gap-1 md:gap-3 rounded-sm md:rounded-[8px] focus:outline-none focus-within:outline-none focus-visible:outline-none"
             onClick={() => setDialogOpen(true)}
           >
             <svg
